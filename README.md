@@ -4,6 +4,9 @@
 _Arijit Mukherjee_<br>
 _17305t002_
 
+
+<img src="imgs/fit.gif"></img>
+<br><br>
 ### DATA DESCRIPTION
 
 
@@ -14,32 +17,32 @@ The dataset provided here is a standard dataset which was polluted with noise.
 ### ATTRIBUTE INFORMATION:
 
     Id: Id
-    date: time year-month-day hour:minute:second 
-    T1: Temperature in kitchen area, in Celsius 
-    RH_1: Humidity in kitchen area, in % 
-    T2: Temperature in living room area, in Celsius 
-    RH_2: Humidity in living room area, in % 
-    T3: Temperature in laundry room area 
-    RH_3: Humidity in laundry room area, in % 
-    T4: Temperature in office room, in Celsius 
-    RH_4: Humidity in office room, in % 
-    T5: Temperature in bathroom, in Celsius 
-    RH_5: Humidity in bathroom, in % 
-    T6: Temperature outside the building (north side), in Celsius 
-    RH_6: Humidity outside the building (north side), in % 
-    T7: Temperature in ironing room , in Celsius 
-    RH_7: Humidity in ironing room, in % 
-    T8: Temperature in teenager room 2, in Celsius 
-    RH_8: Humidity in teenager room 2, in % 
-    T9: Temperature in parents room, in Celsius 
-    RH_9: Humidity in parents room, in % 
-    T_out: Temperature outside, in Celsius 
-    Press_mm_hg: Pressure in mm Hg 
-    RH_out: Humidity outside in % 
-    Windspeed: Windspeed in m/s 
-    Visibility: Wisibility in km 
-    Tdewpoint: Dew point temperature in Â°C 
-    Output: Appliance energy use in Wh 
+    date: time year-month-day hour:minute:second
+    T1: Temperature in kitchen area, in Celsius
+    RH_1: Humidity in kitchen area, in %
+    T2: Temperature in living room area, in Celsius
+    RH_2: Humidity in living room area, in %
+    T3: Temperature in laundry room area
+    RH_3: Humidity in laundry room area, in %
+    T4: Temperature in office room, in Celsius
+    RH_4: Humidity in office room, in %
+    T5: Temperature in bathroom, in Celsius
+    RH_5: Humidity in bathroom, in %
+    T6: Temperature outside the building (north side), in Celsius
+    RH_6: Humidity outside the building (north side), in %
+    T7: Temperature in ironing room , in Celsius
+    RH_7: Humidity in ironing room, in %
+    T8: Temperature in teenager room 2, in Celsius
+    RH_8: Humidity in teenager room 2, in %
+    T9: Temperature in parents room, in Celsius
+    RH_9: Humidity in parents room, in %
+    T_out: Temperature outside, in Celsius
+    Press_mm_hg: Pressure in mm Hg
+    RH_out: Humidity outside in %
+    Windspeed: Windspeed in m/s
+    Visibility: Wisibility in km
+    Tdewpoint: Dew point temperature in Â°C
+    Output: Appliance energy use in Wh
 
 
 
@@ -721,8 +724,8 @@ pylab.rcParams['figure.figsize'] = (16, 9)
 import time
 import seaborn as sns
 def date2tick(x):
-    k=(time.mktime(time.strptime(x, "%Y-%m-%d %H:%M:%S"))-time.mktime(time.strptime("2016-01-11 17:00:00", "%Y-%m-%d %H:%M:%S")))/600 
-    return int(k) 
+    k=(time.mktime(time.strptime(x, "%Y-%m-%d %H:%M:%S"))-time.mktime(time.strptime("2016-01-11 17:00:00", "%Y-%m-%d %H:%M:%S")))/600
+    return int(k)
 
 data['tick']=data['date'].apply(date2tick)
 data=data.sort_values(by='tick')
@@ -735,12 +738,12 @@ plt.show()
 
 
 
-![png](output_2_1.png)
+![png](imgs/output_2_1.png)
 
 
-### EDA 
+### EDA
 
-Any feature of the Dataset doesn't have any significant correaltion with the Ouput , Exploring The data set furthure , I found that the dataset is nothing but a timeseries taken in 10 mins interval from a date for the next 20 weeks . In the process of building a model to predict the output I exploit the time series property of the data and that the test data belongs to this bounded interval . 
+Any feature of the Dataset doesn't have any significant correaltion with the Ouput , Exploring The data set furthure , I found that the dataset is nothing but a timeseries taken in 10 mins interval from a date for the next 20 weeks . In the process of building a model to predict the output I exploit the time series property of the data and that the test data belongs to this bounded interval .
 
 I then transform date to two features <b>x</b> and <b>k</b>
 
@@ -750,7 +753,7 @@ Each hour have 6 readings and each day have 6 x 24 =144 reading and each week ha
 
 #### Feature k
 
-Feature k is the kth week . 
+Feature k is the kth week .
 
 
 ### REGRESSION MODEL
@@ -761,7 +764,7 @@ Later I treated every week 'k' seperately and trained a seperate model for each 
 
 Here I used Radial Basis Functions to and transformed my feature 'x' in every 'k' to 1008 radial basis curves each with mean at 1 , 2 . . . 1008 . and a fixed sigma=2 , which is a tunable parameter . My probelm reduces to minimize error while finding the regression curve as a linear combination of these rbf functions
 
-This transformation enables me to fit the data apporopriately . 
+This transformation enables me to fit the data apporopriately .
 
 
 
@@ -770,13 +773,13 @@ This transformation enables me to fit the data apporopriately .
 
 ```python
 from IPython.display import Image
-Image(filename='imgs/rbf.png') 
+Image(filename='imgs/rbf.png')
 ```
 
 
 
 
-![png](output_6_0.png)
+![png](imgs/output_6_0.png)
 
 
 
@@ -784,33 +787,33 @@ Image(filename='imgs/rbf.png')
 
 
 ```python
-Image(filename='imgs/poly.png') 
+Image(filename='imgs/poly.png')
 ```
 
 
 
 
-![png](output_8_0.png)
+![png](imgs/output_8_0.png)
 
 
 
 ### Training Multiple Models and Combining them
 
-20 seperate models are trained for each week and later they are combined to single weight vector , to use this weight vector to directly compute the output using np.dot() , I modified the feature matrix and features were one hot encoded for the k-th week . 
+20 seperate models are trained for each week and later they are combined to single weight vector , to use this weight vector to directly compute the output using np.dot() , I modified the feature matrix and features were one hot encoded for the k-th week .
 
-Though Regularization is implemented for a value of 1 <= P <=2 But this performs best without any regularization . 
+Though Regularization is implemented for a value of 1 <= P <=2 But this performs best without any regularization .
 
 Thats reduced the RMSE Error to 72.13345
 
 
 ```python
-Image(filename='imgs/model1.png') 
+Image(filename='imgs/model1.png')
 ```
 
 
 
 
-![png](output_10_0.png)
+![png](imgs/output_10_0.png)
 
 
 
@@ -822,18 +825,16 @@ Image(filename='imgs/model11.png')
 
 
 
-![png](output_11_0.png)
+![png](imgs/output_11_0.png)
 
 
 
 
 ```python
-Image(filename='imgs/model12.png') 
+Image(filename='imgs/model12.png')
 ```
 
 
 
 
-![png](output_12_0.png)
-
-
+![png](imgs/output_12_0.png)
